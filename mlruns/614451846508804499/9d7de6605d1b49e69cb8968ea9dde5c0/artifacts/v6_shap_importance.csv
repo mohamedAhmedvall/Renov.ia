@@ -1,0 +1,13 @@
+feature,mean_abs_shap
+Age,0.603039
+Longueur,0.5406785
+Age_x_famille,0.44219306
+Decennie_pose,0.32998815
+Diametre,0.18212354
+Etat,0.16418773
+Famille_materiau,0.13233767
+Densite_fuites_km,0.031223767
+Temps_depuis_fuite,0.0285172
+Nb_anomalies,0.0030564154
+Nb_fuites,0.0009679344
+A_deja_fuite,8.703435e-05

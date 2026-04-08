@@ -1,0 +1,9 @@
+feature,mean_abs_shap
+Age,0.70886916
+Longueur,0.5762514
+Age_imputed,0.43750703
+Decennie_pose,0.33050907
+Diametre,0.20449847
+Famille_materiau,0.1702071
+Nb_fuites,0.060623754
+Etat,0.04427551

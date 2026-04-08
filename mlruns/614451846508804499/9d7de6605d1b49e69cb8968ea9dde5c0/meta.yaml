@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/ahmedv_m/Desktop/mohamed_casses/mlruns/614451846508804499/9d7de6605d1b49e69cb8968ea9dde5c0/artifacts
+end_time: 1775134294379
+entry_point_name: ''
+experiment_id: '614451846508804499'
+lifecycle_stage: active
+run_id: 9d7de6605d1b49e69cb8968ea9dde5c0
+run_name: V6_XGBoost_ABANDON_cutoff2018
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1775134284778
+status: 3
+tags: []
+user_id: ahmedv_m

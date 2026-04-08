@@ -1,0 +1,106 @@
+{
+  "status": "ok",
+  "files": [
+    {
+      "path": "C:\\Users\\ahmedv_m\\Desktop\\mohamed_casses\\project-distillate\\_index.md",
+      "filename": "_index.md",
+      "size_bytes": 2718,
+      "estimated_tokens": 679,
+      "doc_type": "unknown"
+    },
+    {
+      "path": "C:\\Users\\ahmedv_m\\Desktop\\mohamed_casses\\project-distillate\\01-dataset-data-quality.md",
+      "filename": "01-dataset-data-quality.md",
+      "size_bytes": 2736,
+      "estimated_tokens": 684,
+      "doc_type": "unknown"
+    },
+    {
+      "path": "C:\\Users\\ahmedv_m\\Desktop\\mohamed_casses\\project-distillate\\02-feature-engineering.md",
+      "filename": "02-feature-engineering.md",
+      "size_bytes": 2740,
+      "estimated_tokens": 685,
+      "doc_type": "unknown"
+    },
+    {
+      "path": "C:\\Users\\ahmedv_m\\Desktop\\mohamed_casses\\project-distillate\\03-model-results-validation.md",
+      "filename": "03-model-results-validation.md",
+      "size_bytes": 3075,
+      "estimated_tokens": 768,
+      "doc_type": "unknown"
+    },
+    {
+      "path": "C:\\Users\\ahmedv_m\\Desktop\\mohamed_casses\\project-distillate\\04-v8-roadmap.md",
+      "filename": "04-v8-roadmap.md",
+      "size_bytes": 2733,
+      "estimated_tokens": 683,
+      "doc_type": "unknown"
+    }
+  ],
+  "summary": {
+    "total_files": 5,
+    "total_size_bytes": 14002,
+    "total_estimated_tokens": 3500
+  },
+  "groups": [
+    {
+      "group_key": "_index.md",
+      "files": [
+        {
+          "path": "C:\\Users\\ahmedv_m\\Desktop\\mohamed_casses\\project-distillate\\_index.md",
+          "filename": "_index.md",
+          "role": "standalone"
+        }
+      ]
+    },
+    {
+      "group_key": "01-dataset-data-quality.md",
+      "files": [
+        {
+          "path": "C:\\Users\\ahmedv_m\\Desktop\\mohamed_casses\\project-distillate\\01-dataset-data-quality.md",
+          "filename": "01-dataset-data-quality.md",
+          "role": "standalone"
+        }
+      ]
+    },
+    {
+      "group_key": "02-feature-engineering.md",
+      "files": [
+        {
+          "path": "C:\\Users\\ahmedv_m\\Desktop\\mohamed_casses\\project-distillate\\02-feature-engineering.md",
+          "filename": "02-feature-engineering.md",
+          "role": "standalone"
+        }
+      ]
+    },
+    {
+      "group_key": "03-model-results-validation.md",
+      "files": [
+        {
+          "path": "C:\\Users\\ahmedv_m\\Desktop\\mohamed_casses\\project-distillate\\03-model-results-validation.md",
+          "filename": "03-model-results-validation.md",
+          "role": "standalone"
+        }
+      ]
+    },
+    {
+      "group_key": "04-v8-roadmap.md",
+      "files": [
+        {
+          "path": "C:\\Users\\ahmedv_m\\Desktop\\mohamed_casses\\project-distillate\\04-v8-roadmap.md",
+          "filename": "04-v8-roadmap.md",
+          "role": "standalone"
+        }
+      ]
+    }
+  ],
+  "routing": {
+    "recommendation": "fan-out",
+    "reason": "5 file(s), ~3,500 estimated tokens \u2014 exceeds single compressor threshold (> 3 files)"
+  },
+  "split_prediction": {
+    "prediction": "unlikely",
+    "reason": "Estimated distillate ~1,166 tokens within 5,000 threshold",
+    "estimated_distillate_tokens": 1166
+  }
+}

@@ -1,0 +1,14 @@
+artifact_uri: file:///C:/Users/ahmedv_m/Desktop/mohamed_casses/mlruns/934815891045103288/64a0c95594ac4896bfe4e9cb520ae033/artifacts
+end_time: 1775131803474
+entry_point_name: ''
+experiment_id: '934815891045103288'
+lifecycle_stage: active
+run_id: 64a0c95594ac4896bfe4e9cb520ae033
+run_name: V5_XGBoost_cutoff2018
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1775131803079
+status: 4
+tags: []
+user_id: ahmedv_m

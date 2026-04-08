@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(.venv/Scripts/python -m pytest tests/ -v --tb=short)",
+      "Bash(.venv/Scripts/pip install:*)",
+      "Bash(.venv/Scripts/python -c ':*)",
+      "Bash(.venv/Scripts/python -c \"import pydeck; print\\('pydeck', pydeck.__version__\\)\")",
+      "Bash(.venv/Scripts/python -m pytest tests/ -q)",
+      "Bash(find c:/Users/ahmedv_m/Desktop/mohamed_casses/app -type d -name __pycache__ -exec rm -rf {} +)",
+      "Bash(python -c ':*)",
+      "Bash(python eda.py)",
+      "Bash(python model.py)",
+      "Bash(PYTHONIOENCODING=utf-8 python model.py)",
+      "Bash(pkill -f streamlit)",
+      "Bash(python -c \"import folium, streamlit_folium; print\\(folium.__version__, streamlit_folium.__version__\\)\")"
+    ]
+  }
+}
