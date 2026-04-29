@@ -1,4 +1,4 @@
-"""Vue dashboard — tableau de bord opérationnel, KPIs patrimoine, risques, courbe Lift."""
+"""Vue Audit patrimoine — tableau de bord opérationnel, KPIs patrimoine, risques, courbe Lift."""
 
 from datetime import datetime
 

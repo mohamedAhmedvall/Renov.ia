@@ -345,12 +345,12 @@ def render(df_scoring: pd.DataFrame, df_referentiel: pd.DataFrame, config: dict,
     troncon_id = st.session_state.get("troncon_selectionne")
 
     if troncon_id is None:
-        st.info("Sélectionnez un tronçon depuis le tableau ou la carte pour voir sa fiche détaillée.")
+        st.info("Sélectionnez un tronçon depuis la vue Détails par tronçons ou la Carte du réseau pour voir sa fiche détaillée.")
         return
 
     # Bouton retour
-    if st.button("← Retour au tableau"):
-        st.session_state.vue_active = "Tableau"
+    if st.button("← Retour à la vue Détails par tronçons"):
+        st.session_state.vue_active = "Détails par tronçons"
         st.session_state.troncon_selectionne = None
         st.rerun()
 

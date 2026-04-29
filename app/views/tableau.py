@@ -1,4 +1,4 @@
-"""Vue tableau — liste explorable des tronçons, triée par risque."""
+"""Vue Détails par tronçons — liste explorable des tronçons, triée par risque."""
 
 import pandas as pd
 import streamlit as st
@@ -99,7 +99,7 @@ def _build_display_df(df: pd.DataFrame, config: dict, horizon: int) -> pd.DataFr
 
 
 def render(df_scoring: pd.DataFrame, df_referentiel: pd.DataFrame, config: dict, **kwargs):
-    """Point d'entrée de la vue Tableau."""
+    """Point d'entrée de la vue Détails par tronçons."""
     if df_scoring is None or df_scoring.empty:
         st.info("Aucun tronçon ne correspond aux filtres appliqués.")
         return

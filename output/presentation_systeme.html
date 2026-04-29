@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Présentation — Système de Prédiction et Planification du Renouvellement</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #fff; color: #263238; line-height: 1.7; }
+
+        /* ── Slide styling ── */
+        .slide {
+            min-height: 100vh;
+            padding: 4em 6em;
+            page-break-after: always;
+            position: relative;
+        }
+        .slide-number {
+            position: absolute;
+            bottom: 2em;
+            right: 3em;
+            font-size: 0.9em;
+            color: #90a4ae;
+        }
+
+        /* ── Cover ── */
+        .cover {
+            background: linear-gradient(135deg, #0d47a1, #1565c0, #1976d2);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .cover h1 { font-size: 2.8em; margin-bottom: 0.3em; font-weight: 800; }
+        .cover h2 { font-size: 1.4em; font-weight: 400; opacity: 0.9; margin-bottom: 2em; }
+        .cover .meta { font-size: 1em; opacity: 0.7; }
+
+        /* ── Section headers ── */
+        .section-header {
+            background: #1565c0;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .section-header h1 { font-size: 2.5em; }
+        .section-header p { font-size: 1.2em; opacity: 0.85; margin-top: 0.5em; }
+
+        /* ── Content slides ── */
+        h1 { font-size: 1.8em; color: #0d47a1; margin-bottom: 1em; padding-bottom: 0.4em; border-bottom: 3px solid #1976d2; }
+        h2 { font-size: 1.3em; color: #1565c0; margin: 1.5em 0 0.6em; }
+        h3 { font-size: 1.1em; color: #37474f; margin: 1em 0 0.5em; }
+
+        p { margin-bottom: 0.8em; }
+        ul, ol { margin: 0.5em 0 1em 2em; }
+        li { margin-bottom: 0.4em; }
+
+        /* ── Speech notes ── */
+        .speech {
+            background: #f5f5f5;
+            border-left: 4px solid #1976d2;
+            padding: 1.2em 1.5em;
+            margin: 1.5em 0;
+            font-style: italic;
+            color: #455a64;
+            font-size: 0.95em;
+            border-radius: 0 6px 6px 0;
+        }
+        .speech::before {
+            content: "SPEECH";
+            display: block;
+            font-style: normal;
+            font-weight: 700;
+            font-size: 0.75em;
+            color: #1976d2;
+            margin-bottom: 0.5em;
+            letter-spacing: 0.1em;
+        }
+
+        /* ── KPI boxes ── */
+        .kpi-row { display: flex; gap: 1.2em; margin: 1.5em 0; flex-wrap: wrap; }
+        .kpi {
+            flex: 1;
+            min-width: 180px;
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 1.2em;
+            text-align: center;
+        }
+        .kpi .number { font-size: 2.2em; font-weight: 800; color: #0d47a1; }
+        .kpi .label { font-size: 0.85em; color: #546e7f; margin-top: 0.3em; }
+        .kpi.red { background: #ffebee; }
+        .kpi.red .number { color: #c62828; }
+        .kpi.green { background: #e8f5e9; }
+        .kpi.green .number { color: #2e7d32; }
+        .kpi.orange { background: #fff3e0; }
+        .kpi.orange .number { color: #e65100; }
+
+        /* ── Tables ── */
+        table { border-collapse: collapse; width: 100%; margin: 1em 0; font-size: 0.9em; }
+        th { background: #0d47a1; color: white; padding: 0.7em 1em; text-align: center; }
+        td { border: 1px solid #ddd; padding: 0.5em 0.8em; text-align: center; }
+        tr:nth-child(even) { background: #f5f8fc; }
+
+        /* ── Callouts ── */
+        .callout {
+            background: #e8eaf6;
+            border-radius: 8px;
+            padding: 1.2em 1.5em;
+            margin: 1.5em 0;
+        }
+        .callout strong { color: #1a237e; }
+        .callout.red { background: #ffebee; }
+        .callout.red strong { color: #c62828; }
+        .callout.green { background: #e8f5e9; }
+        .callout.green strong { color: #2e7d32; }
+
+        /* ── Flow diagram ── */
+        .flow { display: flex; align-items: center; gap: 0.5em; margin: 1.5em 0; flex-wrap: wrap; }
+        .flow-step {
+            background: #e3f2fd;
+            border: 2px solid #1976d2;
+            border-radius: 8px;
+            padding: 0.8em 1.2em;
+            font-weight: 600;
+            font-size: 0.9em;
+            text-align: center;
+            min-width: 130px;
+        }
+        .flow-arrow { font-size: 1.5em; color: #1976d2; }
+        .flow-step.highlight { background: #1976d2; color: white; }
+
+        /* ── Two columns ── */
+        .two-col { display: flex; gap: 2em; }
+        .two-col > div { flex: 1; }
+
+        /* ── Comparison ── */
+        .vs-box { display: flex; gap: 1em; margin: 1em 0; }
+        .vs-item { flex: 1; padding: 1em; border-radius: 8px; }
+        .vs-item.before { background: #ffebee; border: 2px solid #ef9a9a; }
+        .vs-item.after { background: #e8f5e9; border: 2px solid #a5d6a7; }
+        .vs-item h3 { margin-top: 0; }
+
+        @media print {
+            .slide { min-height: auto; page-break-after: always; padding: 2em; }
+            .speech { background: #f9f9f9; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 0 — COUVERTURE                                          -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide cover">
+    <h1>Prédiction et planification<br/>du renouvellement des canalisations</h1>
+    <h2>Un système d'aide à la décision basé sur l'intelligence artificielle</h2>
+    <div class="meta">
+        Modèle V9 — Avril 2026
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 1 — LE CONTEXTE                                         -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+    <h1>1. Le contexte : pourquoi ce projet ?</h1>
+
+    <div class="kpi-row">
+        <div class="kpi">
+            <div class="number">7 246 km</div>
+            <div class="label">de réseau en service</div>
+        </div>
+        <div class="kpi">
+            <div class="number">182 075</div>
+            <div class="label">tronçons à surveiller</div>
+        </div>
+        <div class="kpi red">
+            <div class="number">30 000+</div>
+            <div class="label">anomalies historiques enregistrées</div>
+        </div>
+        <div class="kpi orange">
+            <div class="number">72 km/an</div>
+            <div class="label">obligation de renouvellement (1%/an)</div>
+        </div>
+    </div>
+
+    <h2>Le problème</h2>
+    <ul>
+        <li><strong>On ne peut pas tout renouveler.</strong> Le budget impose des choix. Chaque euro doit aller au bon endroit.</li>
+        <li><strong>Le renouvellement au « feeling » ou à l'ancienneté</strong> laisse passer des tronçons critiques et en remplace d'autres qui auraient encore tenu.</li>
+        <li><strong>Les fuites coûtent cher :</strong> réparation en urgence, pertes en eau, dommages aux tiers, image du service.</li>
+    </ul>
+
+    <h2>L'objectif</h2>
+    <p><strong>Passer d'un renouvellement réactif à un renouvellement prédictif :</strong> identifier en avance les tronçons qui vont fuir, pour les renouveler <em>avant</em> la casse.</p>
+
+    <div class="speech">
+        On gère un réseau de plus de 7 000 kilomètres, soit 182 000 tronçons. Chaque année, on doit renouveler au moins 1% du réseau, c'est l'obligation réglementaire. Ça fait environ 72 kilomètres par an. Mais avec les budgets dont on dispose, la question n'est pas « est-ce qu'on renouvelle ? » mais « on renouvelle quoi en priorité ? ». Aujourd'hui, cette décision repose souvent sur l'ancienneté, le retour terrain, parfois l'intuition. Ce qu'on a construit, c'est un outil qui exploite toutes les données historiques du réseau pour répondre à cette question de manière objective et quantifiée.
+    </div>
+    <div class="slide-number">1</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 2 — LES DONNÉES                                         -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+    <h1>2. Les données mobilisées</h1>
+
+    <div class="two-col">
+        <div>
+            <h2>3 sources croisées</h2>
+            <table>
+                <tr><th>Source</th><th>Contenu</th><th>Volume</th></tr>
+                <tr><td><strong>Référentiel cana</strong></td><td>Caractéristiques de chaque tronçon : matériau, diamètre, longueur, date de pose, statut</td><td>222 000 tronçons</td></tr>
+                <tr><td><strong>Historique anomalies</strong></td><td>Fuites signalées et détectées, avec date et type</td><td>30 000 événements</td></tr>
+                <tr><td><strong>Aléa argile (RGA)</strong></td><td>Exposition au retrait-gonflement des argiles par tronçon</td><td>222 000 tronçons</td></tr>
+            </table>
+        </div>
+        <div>
+            <h2>Ce qu'on en extrait (9 features)</h2>
+            <ol>
+                <li><strong>Âge</strong> du tronçon</li>
+                <li><strong>Flag « âge imputé »</strong> (date de pose manquante)</li>
+                <li><strong>Diamètre</strong></li>
+                <li><strong>Longueur</strong></li>
+                <li><strong>Décennie de pose</strong> (effet génération)</li>
+                <li><strong>Nombre de fuites passées</strong></li>
+                <li><strong>Années depuis la dernière fuite</strong></li>
+                <li><strong>Famille de matériau</strong> (encodage statistique)</li>
+                <li><strong>Aléa argile</strong> (nul / moyen / fort)</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="speech">
+        Le modèle s'appuie sur trois sources de données qu'on croise au niveau de chaque tronçon. D'abord le référentiel du réseau : on connaît chaque tronçon, son matériau, son diamètre, sa date de pose. Ensuite l'historique des anomalies : toutes les fuites signalées ou détectées depuis des dizaines d'années. Et enfin la cartographie de l'aléa argile, parce que le retrait-gonflement des sols peut fragiliser les conduites.
+        <br/><br/>
+        De ces données brutes, on extrait 9 variables qui caractérisent chaque tronçon. L'âge est évidemment important, mais pas suffisant — on va voir que le modèle apprend des combinaisons bien plus fines.
+    </div>
+    <div class="slide-number">2</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 3 — LE MODÈLE                                           -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+    <h1>3. Comment fonctionne le modèle</h1>
+
+    <div class="flow">
+        <div class="flow-step">Données<br/>historiques</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">Construction<br/>des features</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step highlight">XGBoost<br/>(apprentissage)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">Calibration<br/>des probabilités</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step highlight">Score de risque<br/>par tronçon</div>
+    </div>
+
+    <div class="two-col">
+        <div>
+            <h2>Le principe</h2>
+            <ul>
+                <li>On pose la question : <strong>« Ce tronçon va-t-il fuir dans les 1 / 3 / 5 prochaines années ? »</strong></li>
+                <li>Le modèle apprend les schémas qui mènent à une fuite en étudiant l'historique réel</li>
+                <li>Il produit une <strong>probabilité calibrée</strong> pour chaque tronçon et chaque horizon</li>
+                <li>Un score de 5% signifie vraiment 5 chances sur 100 de fuite — ce n'est pas un score arbitraire</li>
+            </ul>
+
+            <h2>Validation temporelle stricte</h2>
+            <ul>
+                <li>On entraîne sur le passé, on teste sur le futur — <strong>jamais l'inverse</strong></li>
+                <li>Le modèle ne « triche » pas : il n'a accès qu'aux informations connues au moment de la prédiction</li>
+                <li>3 fenêtres de backtesting indépendantes pour mesurer la stabilité</li>
+            </ul>
+        </div>
+        <div>
+            <h2>Ce que le modèle apprend</h2>
+            <p>Par ordre d'importance (analyse SHAP) :</p>
+            <table>
+                <tr><th>Variable</th><th>Importance</th></tr>
+                <tr><td>Longueur</td><td style="background:#bbdefb;">&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608;&#9608; 1.27</td></tr>
+                <tr><td>Décennie de pose</td><td style="background:#bbdefb;">&#9608;&#9608;&#9608;&#9608; 0.53</td></tr>
+                <tr><td>Âge</td><td style="background:#bbdefb;">&#9608;&#9608;&#9608; 0.48</td></tr>
+                <tr><td>Flag âge imputé</td><td style="background:#bbdefb;">&#9608;&#9608;&#9608; 0.46</td></tr>
+                <tr><td>Famille matériau</td><td style="background:#bbdefb;">&#9608;&#9608;&#9608; 0.40</td></tr>
+                <tr><td>Dernière fuite</td><td style="background:#bbdefb;">&#9608;&#9608; 0.33</td></tr>
+                <tr><td>Diamètre</td><td style="background:#bbdefb;">&#9608;&#9608; 0.33</td></tr>
+                <tr><td>Aléa argile</td><td style="background:#bbdefb;">&#9608; 0.15</td></tr>
+                <tr><td>Nb fuites passées</td><td style="background:#bbdefb;"> 0.09</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="speech">
+        Le modèle, c'est un algorithme d'apprentissage supervisé — du XGBoost — qui a étudié des centaines de milliers de situations passées pour apprendre quels profils de tronçons mènent à des fuites. Il ne se base pas sur une seule variable : il combine l'âge, le matériau, le diamètre, l'historique de fuites, le type de sol...
+        <br/><br/>
+        Un point important : les scores qu'il produit sont des vraies probabilités calibrées. Quand le modèle dit « ce tronçon a 8% de chance de fuir dans 3 ans », c'est un chiffre qu'on peut additionner, comparer, et utiliser pour calculer des espérances de fuites évitées. Ce n'est pas un score arbitraire.
+        <br/><br/>
+        Et surtout : on valide le modèle sur des données qu'il n'a jamais vues. On l'entraîne sur le passé et on regarde s'il a raison sur le futur. C'est le seul test qui compte.
+    </div>
+    <div class="slide-number">3</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 4 — PERFORMANCES                                        -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+    <h1>4. Est-ce que ça marche ? — Les preuves</h1>
+
+    <h2>4.1. Le modèle surpasse largement le critère d'âge</h2>
+
+    <div class="kpi-row">
+        <div class="kpi green">
+            <div class="number">0.84</div>
+            <div class="label">AUC du modèle (moyenne backtesting)</div>
+        </div>
+        <div class="kpi">
+            <div class="number">0.69</div>
+            <div class="label">AUC du critère d'âge seul</div>
+        </div>
+        <div class="kpi green">
+            <div class="number">+0.15</div>
+            <div class="label">Gain du modèle vs l'âge</div>
+        </div>
+        <div class="kpi green">
+            <div class="number">70.8%</div>
+            <div class="label">Fuites capturées dans le top 20%</div>
+        </div>
+    </div>
+
+    <table>
+        <tr><th>Fenêtre de test</th><th>AUC Modèle</th><th>AUC Âge seul</th><th>Gain</th><th>Capture top 20%</th></tr>
+        <tr><td>Entraîné &le; 2012, testé 2012–2015</td><td><strong>0.863</strong></td><td>0.685</td><td>+0.178</td><td>74.0%</td></tr>
+        <tr><td>Entraîné &le; 2015, testé 2015–2018</td><td><strong>0.837</strong></td><td>0.686</td><td>+0.151</td><td>70.5%</td></tr>
+        <tr><td>Entraîné &le; 2018, testé 2018–2021</td><td><strong>0.823</strong></td><td>0.687</td><td>+0.136</td><td>67.9%</td></tr>
+    </table>
+
+    <h2>4.2. Le top 20% concentre le risque &times;42</h2>
+
+    <table>
+        <tr><th>Tranche de score</th><th>Taux de fuite réel</th><th>Ratio vs reste</th></tr>
+        <tr><td style="background:#ffcdd2;"><strong>Top 5%</strong></td><td><strong>6.79%</strong></td><td><strong>&times;42</strong> vs bottom 50%</td></tr>
+        <tr><td style="background:#ffcdd2;">Top 5–10%</td><td>2.53%</td><td>&times;16</td></tr>
+        <tr><td>Top 10–20%</td><td>1.52%</td><td>&times;9.5</td></tr>
+        <tr><td>Top 20–50%</td><td>0.64%</td><td>&times;4</td></tr>
+        <tr><td>Bottom 50%</td><td>0.16%</td><td>référence</td></tr>
+    </table>
+
+    <div class="speech">
+        Passons aux résultats. La question, c'est : est-ce que le modèle fait mieux que le simple critère d'âge ? La réponse est oui, nettement. L'AUC — c'est la mesure standard de qualité d'un classement — passe de 0.69 avec l'âge seul à 0.84 avec le modèle. C'est un gain très significatif.
+        <br/><br/>
+        En pratique, ça veut dire quoi ? Si on prend les 20% de tronçons que le modèle classe comme les plus à risque, on y retrouve 71% des fuites qui surviennent réellement. Autrement dit : en ciblant un cinquième du réseau, on adresse plus des deux tiers du problème.
+        <br/><br/>
+        Et le contraste est frappant : les tronçons du top 5% ont un taux de fuite réel de 6.8%, soit 42 fois plus que la moitié basse du classement. Le modèle ne classe pas au hasard — il identifie vraiment les zones de concentration du risque.
+    </div>
+    <div class="slide-number">4</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 5 — LE CHIFFRE QUI FRAPPE                                -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+    <h1>5. 1 120 fuites qu'on aurait pu éviter</h1>
+
+    <div class="callout red" style="font-size: 1.15em; text-align: center; padding: 1.5em;">
+        Entre 2018 et 2021, <strong>1 120 tronçons</strong> identifiés comme à haut risque par le modèle
+        ont <strong>effectivement fui</strong> — mais <strong>n'avaient pas été renouvelés</strong>.
+    </div>
+
+    <div class="kpi-row">
+        <div class="kpi">
+            <div class="number">192 413</div>
+            <div class="label">tronçons scorés en 2018</div>
+        </div>
+        <div class="kpi red">
+            <div class="number">1 756</div>
+            <div class="label">fuites survenues 2018–2021</div>
+        </div>
+        <div class="kpi green">
+            <div class="number">1 234</div>
+            <div class="label">étaient dans le top 20% du modèle (70.3%)</div>
+        </div>
+        <div class="kpi red">
+            <div class="number">1 120</div>
+            <div class="label">non renouvelés malgré le signal</div>
+        </div>
+    </div>
+
+    <h2>Le protocole</h2>
+    <ol>
+        <li>On entraîne le modèle V9 sur les données jusqu'à 2015</li>
+        <li>On score tous les tronçons à la date de 2018</li>
+        <li>On regarde les fuites réellement survenues entre 2018 et 2021</li>
+        <li>On croise : le modèle avait-il raison ? Le tronçon a-t-il été renouvelé ?</li>
+    </ol>
+
+    <h2>Exemples concrets</h2>
+    <table>
+        <tr><th>#</th><th>Tronçon</th><th>Matériau</th><th>Diamètre</th><th>Âge en 2018</th><th>Score prédit</th></tr>
+        <tr><td>1</td><td>410118056</td><td>Acier</td><td>80 mm</td><td>38 ans</td><td><strong>66.4%</strong></td></tr>
+        <tr><td>2</td><td>410032867</td><td>Plastique</td><td>51 mm</td><td>47 ans</td><td><strong>65.1%</strong></td></tr>
+        <tr><td>3</td><td>410016559</td><td>Plastique</td><td>51 mm</td><td>48 ans</td><td><strong>61.8%</strong></td></tr>
+        <tr><td>4</td><td>410053079</td><td>Fonte</td><td>60 mm</td><td>45 ans</td><td><strong>60.4%</strong></td></tr>
+        <tr><td>5</td><td>410107002</td><td>Plastique</td><td>51 mm</td><td>47 ans</td><td><strong>55.3%</strong></td></tr>
+    </table>
+    <p style="color: #666; font-size: 0.9em;">Ces 5 tronçons avaient chacun plus de 55% de probabilité de fuir sur 3 ans. Ils ont tous fui. Aucun n'a été renouvelé.</p>
+
+    <div class="speech">
+        C'est le chiffre le plus parlant de toute cette présentation. On a fait un exercice rétrospectif : on a pris le modèle, on l'a fait tourner comme si on était en 2018, et on a regardé ce qui s'est passé ensuite.
+        <br/><br/>
+        Résultat : 1 756 fuites sont survenues entre 2018 et 2021. Parmi elles, 1 234 étaient dans le top 20% des scores du modèle — le modèle avait vu juste dans 70% des cas. Et sur ces 1 234, 1 120 n'avaient pas été renouvelés.
+        <br/><br/>
+        Mille cent vingt fuites que le modèle avait anticipées, et qu'on aurait pu éviter si on avait eu cet outil trois ans plus tôt. Chacune de ces fuites, c'est une intervention en urgence, de l'eau perdue, parfois des dégâts chez des usagers.
+        <br/><br/>
+        Prenons un exemple concret : le tronçon 410118056, de l'acier, 80 mm de diamètre, 38 ans d'âge. Le modèle lui donnait 66% de probabilité de fuir dans les 3 ans. Il a effectivement fui. Et il n'a pas été renouvelé. C'est exactement ce type de situation que le système permet d'éviter.
+    </div>
+    <div class="slide-number">5</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 6 — CE QUE LES ABANDONNÉS NOUS APPRENNENT               -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+    <h1>6. Ce que les tronçons abandonnés nous apprennent</h1>
+
+    <div class="kpi-row">
+        <div class="kpi">
+            <div class="number">39 004</div>
+            <div class="label">tronçons abandonnés ou déposés</div>
+        </div>
+        <div class="kpi orange">
+            <div class="number">10.4%</div>
+            <div class="label">avaient eu au moins 1 fuite avant</div>
+        </div>
+        <div class="kpi">
+            <div class="number">11.9 ans</div>
+            <div class="label">délai moyen dernière fuite &rarr; abandon</div>
+        </div>
+        <div class="kpi">
+            <div class="number">7 ans</div>
+            <div class="label">délai médian</div>
+        </div>
+    </div>
+
+    <div class="two-col">
+        <div>
+            <h2>Délai entre dernière fuite et abandon</h2>
+            <table>
+                <tr><th>Délai</th><th>Proportion</th></tr>
+                <tr><td>0–2 ans</td><td>~30%</td></tr>
+                <tr><td>3–5 ans</td><td>~20%</td></tr>
+                <tr><td>6–10 ans</td><td>~15%</td></tr>
+                <tr><td>&gt;10 ans</td><td>~35%</td></tr>
+            </table>
+        </div>
+        <div>
+            <h2>Par famille de matériau</h2>
+            <table>
+                <tr><th>Matériau</th><th>% avec fuite avant</th></tr>
+                <tr><td>Plastique</td><td><strong>17.0%</strong></td></tr>
+                <tr><td>Fonte grise</td><td>13.6%</td></tr>
+                <tr><td>Acier</td><td>12.5%</td></tr>
+                <tr><td>Amiante-ciment</td><td>9.0%</td></tr>
+                <tr><td>Béton</td><td>7.3%</td></tr>
+                <tr><td>Fonte</td><td>4.1%</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="callout">
+        <strong>Deux enseignements :</strong>
+        <br/>1. La fuite est un <strong>signal précurseur</strong> de fin de vie — le modèle l'exploite avec un délai d'anticipation de 7 à 12 ans.
+        <br/>2. Près de 90% des abandons se font <strong>sans fuite enregistrée</strong> &rarr; remplacements d'opportunité (voirie) ou historique incomplet. Le modèle permet de rationaliser ces choix.
+    </div>
+
+    <div class="speech">
+        On s'est aussi intéressé aux tronçons qu'on a déjà abandonnés par le passé : 39 000 tronçons. L'idée c'est de comprendre le cycle de vie réel.
+        <br/><br/>
+        Premier constat : seulement 10% des tronçons abandonnés avaient une fuite enregistrée avant. Ça ne veut pas dire qu'ils allaient bien — ça veut dire que 90% des remplacements se font pour d'autres raisons : opportunité de travaux de voirie, vétusté constatée visuellement, ou simplement un historique de fuites incomplet dans nos bases.
+        <br/><br/>
+        Deuxième constat, pour ceux qui avaient fui : le délai moyen entre la dernière fuite et l'abandon est de 12 ans, avec une médiane à 7 ans. C'est dans cette fenêtre que le modèle peut agir : identifier les tronçons qui ont commencé à montrer des signes, et programmer leur remplacement avant qu'ils ne multiplient les incidents.
+    </div>
+    <div class="slide-number">6</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 7 — LE LINÉAIRE À RISQUE                                 -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+    <h1>7. Le linéaire à risque face à l'obligation réglementaire</h1>
+
+    <div class="kpi-row">
+        <div class="kpi">
+            <div class="number">7 246 km</div>
+            <div class="label">réseau total en service</div>
+        </div>
+        <div class="kpi red">
+            <div class="number">3 772 km</div>
+            <div class="label">linéaire dans le top 20% de risque</div>
+        </div>
+        <div class="kpi orange">
+            <div class="number">52 ans</div>
+            <div class="label">pour renouveler le top 20% à 1%/an</div>
+        </div>
+    </div>
+
+    <h2>Répartition du risque par tranche</h2>
+    <table>
+        <tr><th>Tranche</th><th>Tronçons</th><th>Linéaire</th><th>Score H3 moyen</th><th>Fuites hist. moy.</th></tr>
+        <tr style="background:#ffcdd2;"><td><strong>Top 5%</strong></td><td>9 103</td><td>1 211 km</td><td>6.60%</td><td>0.80</td></tr>
+        <tr style="background:#ffe0b2;"><td>Top 5–10%</td><td>9 104</td><td>1 031 km</td><td>2.64%</td><td>0.19</td></tr>
+        <tr><td>Top 10–20%</td><td>18 208</td><td>1 524 km</td><td>1.53%</td><td>0.10</td></tr>
+        <tr><td>Top 20–50%</td><td>54 622</td><td>2 210 km</td><td>0.79%</td><td>0.05</td></tr>
+        <tr><td>Bottom 50%</td><td>90 947</td><td>1 259 km</td><td>0.32%</td><td>0.03</td></tr>
+    </table>
+
+    <div class="callout">
+        <strong>Message clé :</strong> Les tronçons à risque sont aussi les plus longs (52% du linéaire pour 20% des tronçons). La longueur est à la fois un facteur de risque et un facteur de coût.
+        Renouveler les 72 km/an les plus critiques — ceux identifiés par le modèle — a un impact disproportionné par rapport à un renouvellement « au kilomètre ».
+    </div>
+
+    <div class="speech">
+        Maintenant regardons l'ampleur du défi. Le top 20% des tronçons à risque représente 3 772 kilomètres de réseau. C'est plus de la moitié du linéaire total, parce que les tronçons à risque sont en général plus longs — la longueur est d'ailleurs la variable la plus importante du modèle.
+        <br/><br/>
+        Au rythme de 1% du réseau par an, soit 72 kilomètres, il faudrait 52 ans pour renouveler tout ce top 20%. On ne peut évidemment pas tout faire. C'est là que la priorisation prend tout son sens : il faut concentrer les moyens sur les premiers pourcents, ceux où le score est le plus élevé, ceux qui vont fuir en premier. Le top 5% à lui seul représente 1 211 km avec un score moyen de 6.6% sur 3 ans — c'est là que l'impact est maximal.
+    </div>
+    <div class="slide-number">7</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 8 — L'OPTIMISEUR                                         -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+    <h1>8. L'optimiseur de renouvellement</h1>
+
+    <div class="flow">
+        <div class="flow-step">Scores V9<br/>par tronçon</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step">Budget<br/>+ contraintes</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step highlight">Optimiseur<br/>(knapsack greedy)</div>
+        <div class="flow-arrow">&rarr;</div>
+        <div class="flow-step highlight">Plan de<br/>renouvellement</div>
+    </div>
+
+    <h2>Le principe</h2>
+    <div class="two-col">
+        <div>
+            <h3>Entrées</h3>
+            <ul>
+                <li><strong>Enveloppe budgétaire</strong> (ajustable)</li>
+                <li><strong>Horizon</strong> : 1, 3, ou 5 ans</li>
+                <li><strong>Coût unitaire</strong> : dépend du type de chantier et du matériau de remplacement</li>
+                <li><strong>Contraintes</strong> : tronçons forcés / exclus, seuil 1% du réseau</li>
+            </ul>
+        </div>
+        <div>
+            <h3>Sorties</h3>
+            <ul>
+                <li><strong>Liste priorisée</strong> des tronçons à renouveler</li>
+                <li><strong>Fuites évitées</strong> = somme des probabilités calibrées</li>
+                <li><strong>Budget consommé</strong> et linéaire renouvelé</li>
+                <li><strong>Carte interactive</strong> du plan</li>
+                <li><strong>Export PDF / CSV</strong></li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>L'algorithme</h2>
+    <p>Pour chaque tronçon, on calcule un <strong>ratio risque / coût</strong> :</p>
+    <div class="callout" style="text-align: center; font-size: 1.1em;">
+        ratio = (score &times; longueur) / coût du remplacement
+    </div>
+    <p>L'optimiseur sélectionne les tronçons par ratio décroissant jusqu'à épuisement du budget.
+       C'est l'approche classique du problème du sac à dos — rapide, déterministe, et à moins de 1% de la solution optimale.</p>
+
+    <h2>Évolution prévue</h2>
+    <div class="callout green">
+        <strong>Prochaine étape :</strong> enrichir la notion de risque → <code>risque = P(défaillance) &times; conséquence</code>.
+        La conséquence intégrera la criticité du tronçon (desserte, sensibilité, coût d'une réparation urgente vs préventive).
+        L'optimiseur passera d'un tri par probabilité pure à un tri par <strong>impact métier</strong>.
+    </div>
+
+    <div class="speech">
+        Le modèle produit des scores. L'optimiseur traduit ces scores en un plan d'action concret. Vous lui donnez un budget, un horizon, des contraintes — et il vous sort la liste des tronçons à renouveler en priorité, classés de manière à maximiser le nombre de fuites évitées par euro investi.
+        <br/><br/>
+        L'algorithme est simple mais efficace : pour chaque tronçon, on calcule un ratio risque sur coût. Le risque, c'est la probabilité de fuite multipliée par la longueur. Le coût, c'est la longueur fois le prix au mètre linéaire, qui dépend du type de chantier et du matériau de remplacement. On prend les meilleurs ratios jusqu'à épuisement du budget.
+        <br/><br/>
+        Parce que les scores sont des vraies probabilités calibrées, le KPI « fuites évitées » a un sens physique : c'est la somme des probabilités des tronçons qu'on va renouveler. Si on renouvelle 200 tronçons dont la somme des probas fait 15, on s'attend à éviter environ 15 fuites.
+        <br/><br/>
+        Et on ne s'arrête pas là. La prochaine étape, c'est d'intégrer la notion de conséquence : un tronçon sous une école ou un hôpital n'a pas le même enjeu qu'un tronçon en rase campagne. Le risque deviendra « probabilité fois conséquence », et la priorisation sera encore plus pertinente.
+    </div>
+    <div class="slide-number">8</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 9 — L'APPLICATION                                        -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+    <h1>9. L'application — Interface pour les exploitants</h1>
+
+    <h2>5 vues intégrées</h2>
+    <table>
+        <tr><th>Vue</th><th>Usage</th><th>Utilisateur type</th></tr>
+        <tr><td><strong>Dashboard</strong></td><td>Vue d'ensemble du réseau : KPIs, répartition, âge moyen</td><td>Direction, élus</td></tr>
+        <tr><td><strong>Carte</strong></td><td>Visualisation géographique des scores, filtres par matériau/score</td><td>Exploitants, bureau d'études</td></tr>
+        <tr><td><strong>Tableau</strong></td><td>Recherche et tri des tronçons par score, matériau, zone</td><td>Exploitants</td></tr>
+        <tr><td><strong>Détail tronçon</strong></td><td>Fiche complète : historique, scores multi-horizons, caractéristiques</td><td>Exploitants, terrain</td></tr>
+        <tr><td><strong>Optimiseur</strong></td><td>Planification budgétaire : budget &rarr; plan de renouvellement optimal</td><td>Direction, bureau d'études</td></tr>
+    </table>
+
+    <h2>Fonctionnalités clés</h2>
+    <ul>
+        <li><strong>Carte interactive</strong> avec popups détaillés au clic</li>
+        <li><strong>Ajustement en temps réel</strong> : changer le budget ou l'horizon recalcule instantanément le plan</li>
+        <li><strong>Forçage / exclusion</strong> de tronçons par clic sur la carte ou saisie manuelle</li>
+        <li><strong>Export PDF et CSV</strong> du plan de renouvellement</li>
+        <li><strong>Multi-horizons</strong> : visualiser le risque à 1, 3, ou 5 ans</li>
+    </ul>
+
+    <div class="speech">
+        Tout ça serait inutile sans une interface pratique. L'application Streamlit propose 5 vues complémentaires.
+        <br/><br/>
+        Le dashboard pour la vision d'ensemble — c'est ce qu'on montre aux élus ou à la direction : l'état du réseau en un coup d'oeil. La carte pour les exploitants qui veulent voir où sont les risques sur le terrain. Le tableau pour faire des recherches ciblées. Le détail tronçon pour avoir la fiche complète de n'importe quel tronçon. Et l'optimiseur, qui est la pièce maîtresse pour la planification : vous entrez un budget, vous ajustez les contraintes, et le système vous sort le plan optimal en quelques secondes.
+        <br/><br/>
+        L'application est conçue pour que l'exploitant garde la main. Il peut forcer l'inclusion d'un tronçon qu'il sait problématique, ou en exclure un qui a déjà été traité. Le modèle propose, l'humain dispose.
+    </div>
+    <div class="slide-number">9</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 10 — AVANT / APRÈS                                       -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+    <h1>10. Avant / Après — Ce que le système change</h1>
+
+    <div class="vs-box">
+        <div class="vs-item before">
+            <h3 style="color: #c62828;">Avant</h3>
+            <ul>
+                <li>Renouvellement basé sur <strong>l'âge</strong> et <strong>l'intuition terrain</strong></li>
+                <li>Pas de vision globale du risque sur le réseau</li>
+                <li>Opportunités de voirie = principal déclencheur</li>
+                <li>Difficile de <strong>justifier les choix</strong> auprès des élus</li>
+                <li>Pas de mesure de l'impact des investissements</li>
+            </ul>
+        </div>
+        <div class="vs-item after">
+            <h3 style="color: #2e7d32;">Avec le système</h3>
+            <ul>
+                <li>Chaque tronçon a un <strong>score de risque objectif et calibré</strong></li>
+                <li><strong>Carte du risque</strong> sur tout le réseau, mise à jour chaque année</li>
+                <li>Le budget cible <strong>les tronçons à plus fort impact</strong></li>
+                <li><strong>Argumentaire chiffré</strong> : « renouveler ces X km évite Y fuites »</li>
+                <li>Suivi dans le temps : le modèle se valide lui-même par backtesting</li>
+            </ul>
+        </div>
+    </div>
+
+    <h2>L'argumentaire en une phrase</h2>
+    <div class="callout green" style="text-align: center; font-size: 1.2em;">
+        « En 2018, le modèle avait identifié 1 120 tronçons à haut risque qui ont effectivement fui
+        sans avoir été renouvelés. Avec cet outil, on aurait pu les anticiper. »
+    </div>
+
+    <div class="speech">
+        Pour résumer le changement que ce système apporte. Avant, on renouvelle au feeling, à l'ancienneté, ou quand la voirie est ouverte. On ne sait pas quantifier l'impact de nos choix. C'est difficile de justifier un budget de renouvellement devant des élus quand on n'a pas de chiffres solides.
+        <br/><br/>
+        Avec ce système, chaque tronçon du réseau a un score objectif. On peut montrer une carte du risque, chiffrer le nombre de fuites évitées par tranche de budget, et surtout prouver que le modèle marche avec des données réelles — les 1 120 pronostics manqués en sont la démonstration.
+        <br/><br/>
+        Et l'argumentaire pour les élus tient en une phrase : « Si on avait eu cet outil en 2018, on aurait pu anticiper plus d'un millier de fuites. Aujourd'hui on l'a, et on vous propose de l'utiliser pour les trois prochaines années. »
+    </div>
+    <div class="slide-number">10</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- SLIDE 11 — PROCHAINES ÉTAPES                                   -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="slide">
+    <h1>11. Prochaines étapes</h1>
+
+    <table>
+        <tr><th>Priorité</th><th>Action</th><th>Impact attendu</th></tr>
+        <tr>
+            <td><strong>1</strong></td>
+            <td><strong>Risque = P(défaillance) &times; conséquence</strong><br/>Intégrer la criticité (desserte, sensibilité, coût urgence vs préventif) dans l'optimiseur</td>
+            <td>Priorisation par impact métier, pas seulement par probabilité</td>
+        </tr>
+        <tr>
+            <td><strong>2</strong></td>
+            <td><strong>Cartographie des pronostics manqués</strong><br/>Carte interactive des 1 120 tronçons « le modèle avait vu juste »</td>
+            <td>Outil de communication puissant pour les décideurs</td>
+        </tr>
+        <tr>
+            <td><strong>3</strong></td>
+            <td><strong>Chiffrage économique</strong><br/>Coût moyen d'une fuite (urgence + eau perdue + dommages) vs coût préventif</td>
+            <td>ROI du renouvellement ciblé en euros</td>
+        </tr>
+        <tr>
+            <td><strong>4</strong></td>
+            <td><strong>Contraintes opérationnelles</strong><br/>Coordination voirie, regroupement de chantiers, accessibilité</td>
+            <td>Plans réalistes et exécutables sur le terrain</td>
+        </tr>
+        <tr>
+            <td><strong>5</strong></td>
+            <td><strong>Enrichissement données</strong><br/>Pression, interventions terrain, données sols détaillées</td>
+            <td>Amélioration continue de la précision du modèle</td>
+        </tr>
+    </table>
+
+    <div class="speech">
+        Pour finir, les prochaines étapes. La première priorité, c'est d'enrichir la notion de risque dans l'optimiseur. Aujourd'hui on classe par probabilité de fuite. Demain, on veut classer par impact : une fuite sous un hôpital ou une école n'a pas la même gravité qu'une fuite sur un chemin rural. Le risque deviendra probabilité fois conséquence.
+        <br/><br/>
+        Ensuite, on veut créer une cartographie des pronostics manqués — c'est un outil de communication très parlant pour les décideurs. On veut aussi chiffrer en euros le retour sur investissement : combien coûte une fuite en urgence versus un renouvellement préventif ?
+        <br/><br/>
+        Et à plus long terme, intégrer les contraintes opérationnelles — parce qu'un plan optimal sur le papier doit aussi être faisable sur le terrain : coordination avec les travaux de voirie, regroupement de chantiers proches, accessibilité...
+        <br/><br/>
+        Le système est opérationnel aujourd'hui. Chaque itération le rend plus précis et plus utile. Merci.
+    </div>
+    <div class="slide-number">11</div>
+</div>
+
+</body>
+</html>

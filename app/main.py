@@ -102,16 +102,16 @@ if df_scoring is None:
 
 # --- Sidebar : Navigation ---
 # On masque la page Détail
-VUES = ["Dashboard", "Tableau", "Carte", "Optimiseur"]
+VUES = ["Audit patrimoine", "Détails par tronçons", "Carte du réseau", "Optimiseur"]
 
 with st.sidebar:
     # Si on est sur Détail (vue masquée), on garde la radio sur la dernière vue principale
-    active = st.session_state.get("vue_active", "Dashboard")
+    active = st.session_state.get("vue_active", "Audit patrimoine")
     if active not in VUES and active != "Détail":
-        active = "Dashboard"
+        active = "Audit patrimoine"
         st.session_state.vue_active = active
     current_main_vue = (
-        active if active in VUES else st.session_state.get("last_main_vue", "Dashboard")
+        active if active in VUES else st.session_state.get("last_main_vue", "Audit patrimoine")
     )
     vue = st.radio("Navigation", VUES, index=VUES.index(current_main_vue))
     # On n'écrase vue_active QUE si l'utilisateur a réellement changé de vue dans la sidebar
@@ -235,9 +235,9 @@ Ce dashboard permet d'explorer le risque de casse sur le réseau de canalisation
 
 # --- Routing des vues ---
 VUE_RENDERERS = {
-    "Tableau": tableau.render,
-    "Carte": carte.render,
-    "Dashboard": dashboard.render,
+    "Détails par tronçons": tableau.render,
+    "Carte du réseau": carte.render,
+    "Audit patrimoine": dashboard.render,
     "Optimiseur": optimiseur.render,
     "Détail": detail.render,
 }
@@ -245,7 +245,7 @@ VUE_RENDERERS = {
 renderer = VUE_RENDERERS.get(st.session_state.vue_active)
 if renderer:
     extra_kwargs = {}
-    if st.session_state.vue_active == "Carte":
+    if st.session_state.vue_active == "Carte du réseau":
         # Passer la sélection de tronçons à la carte pour surlignage
         extra_kwargs["troncons_selectionnes"] = st.session_state.get(
             "troncons_selectionnes", set()
