@@ -1,0 +1,77 @@
+{
+  "annee_ref": 2024,
+  "fenetre_lambda": 10,
+  "km_total": 8708.271143,
+  "km_par_statut": {
+    "EN SERVICE": 7245.619762,
+    "ABANDONNE": 1087.6404610000002,
+    "DEPOSE": 337.90949399999994,
+    "PROJET": 28.236502999999995,
+    "POSE": 8.646344,
+    "CHANTIER": 0.218579
+  },
+  "n_par_statut": {
+    "EN SERVICE": 182075,
+    "ABANDONNE": 29547,
+    "DEPOSE": 9457,
+    "PROJET": 588,
+    "POSE": 286,
+    "CHANTIER": 4
+  },
+  "km_abandonne": 1087.6404610000002,
+  "km_abandonne_avec_fuite": 291.582456,
+  "pct_km_abandonne_avec_fuite": 26.80871726047344,
+  "pct_n_abandonne_avec_fuite": 12.268589027650862,
+  "delai_last_fuite_abandon_qts": {
+    "P25": 2.0,
+    "P50": 7.0,
+    "P75": 17.0,
+    "P90": 29.0
+  },
+  "lambda_par_famille": {
+    "AmianteCiment": 0.2936,
+    "Plastique": 0.2663,
+    "Acier": 0.1743,
+    "FonteGrise": 0.125,
+    "Fonte": 0.0413,
+    "Beton": 0.033,
+    "Autre": 0.0185
+  },
+  "lambda_par_categorie_dn": {
+    "Branchement (proxy)": 0.5678,
+    "Petit DN <100": 0.2261,
+    "Distribution 100-249": 0.0583,
+    "Transport \u2265250": 0.0554,
+    "Inconnu": 0.007
+  },
+  "vie_mediane_km_par_famille": {
+    "FonteGrise": null,
+    "Fonte": null,
+    "Plastique": null,
+    "AmianteCiment": 114,
+    "Acier": null,
+    "Beton": 118
+  },
+  "stats_evt": [
+    {
+      "statut": "ABANDONNE",
+      "n": 29547,
+      "km": 1087.6404610000002,
+      "age_p5": 0.0,
+      "age_p25": 28.0,
+      "age_med": 54.0,
+      "age_p75": 62.0,
+      "age_p95": 106.0
+    },
+    {
+      "statut": "DEPOSE",
+      "n": 9457,
+      "km": 337.90949399999994,
+      "age_p5": 0.0,
+      "age_p25": 0.0,
+      "age_med": 5.0,
+      "age_p75": 45.0,
+      "age_p95": 55.0
+    }
+  ]
+}
