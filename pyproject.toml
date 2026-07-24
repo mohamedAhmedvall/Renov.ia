@@ -1,0 +1,46 @@
+[project]
+name = "renovia-demo"
+version = "1.0.0"
+description = "Renov.ia (démo publique) — scoring prédictif de défaillance des canalisations et priorisation du renouvellement sous contrainte de budget. Données 100 % synthétiques."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+dependencies = [
+    "pandas>=2.2",
+    "numpy>=1.26",
+    "scikit-learn>=1.4",
+    "xgboost>=2.0",
+    "shap>=0.45",
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.29",
+    "pydantic>=2.6",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "httpx>=0.27",
+    "ruff>=0.4",
+    "mypy>=1.10",
+    "pandas-stubs",
+]
+
+[tool.ruff]
+line-length = 110
+target-version = "py311"
+
+[tool.ruff.lint]
+# PEP 8 (E/W), pyflakes (F), imports (I), bugbear (B), upgrade (UP)
+select = ["E", "W", "F", "I", "B", "UP"]
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+check_untyped_defs = true
+no_implicit_optional = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "slow: tests longs (entraînement ML complet) — exclus de la CI rapide",
+]

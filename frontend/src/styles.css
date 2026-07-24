@@ -1,0 +1,99 @@
+/* Socle visuel + accessibilité RGAA : contrastes AA, focus visible, lien d'évitement. */
+
+:root {
+  --encre: #1c2b33;
+  --fond: #fbfaf7;
+  --accent: #00676c; /* teal — contraste AA sur fond clair */
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--encre);
+  background: var(--fond);
+  line-height: 1.5;
+}
+
+/* Lien d'évitement (RGAA 12.7) : visible à la prise de focus clavier */
+.evitement {
+  position: absolute;
+  left: -9999px;
+  background: var(--accent);
+  color: #fff;
+  padding: 0.5rem 1rem;
+}
+.evitement:focus { left: 0.5rem; top: 0.5rem; z-index: 10; }
+
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+header[role="banner"] {
+  background: var(--accent);
+  color: #fff;
+  padding: 1rem 1.5rem;
+}
+header h1 { margin: 0; font-size: 1.4rem; }
+header p { margin: 0.2rem 0 0; opacity: 0.9; }
+.badge-demo {
+  font-size: 0.7rem;
+  vertical-align: middle;
+  background: #fff;
+  color: var(--accent);
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  margin-left: 0.5rem;
+}
+
+main { max-width: 960px; margin: 0 auto; padding: 1rem 1.5rem 3rem; }
+section { margin-top: 2rem; }
+h2 { border-bottom: 2px solid var(--accent); padding-bottom: 0.25rem; }
+
+.kpi { display: flex; gap: 2rem; flex-wrap: wrap; }
+.kpi dt { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+.kpi dd { margin: 0; font-size: 1.6rem; font-weight: 700; }
+
+.carte { height: 420px; margin-top: 0.75rem; border: 1px solid #d5d2ca; border-radius: 8px; }
+
+table { border-collapse: collapse; width: 100%; margin-top: 0.5rem; }
+th, td { border: 1px solid #d5d2ca; padding: 0.4rem 0.6rem; text-align: left; }
+thead th { background: #eceae4; }
+td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Note 1–5 : couleur + chiffre (jamais la couleur seule) */
+.note {
+  display: inline-block;
+  min-width: 1.6rem;
+  text-align: center;
+  border-radius: 4px;
+  font-weight: 700;
+  color: #fff;
+  padding: 0.1rem 0.3rem;
+}
+.note-1 { background: #2e7d32; }
+.note-2 { background: #797822; }
+.note-3 { background: #9c6f0e; }
+.note-4 { background: #b34e00; }
+.note-5 { background: #c62828; }
+
+form label { font-weight: 600; }
+input, select, button { font: inherit; padding: 0.35rem 0.6rem; }
+button {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+button:hover { filter: brightness(1.1); }
+
+.erreur { color: #b00020; font-weight: 600; }
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap; border: 0;
+}
+
+footer { border-top: 1px solid #d5d2ca; padding: 1rem 1.5rem; font-size: 0.85rem; }
