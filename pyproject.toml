@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "renovia-demo"
 version = "1.0.0"
@@ -23,6 +27,21 @@ dev = [
     "ruff>=0.4",
     "mypy>=1.10",
     "pandas-stubs",
+]
+
+# Layout « plat » assumé (domain/, ml/, optimizer/, backend/ à la racine) :
+# on liste explicitement les packages pour l'install éditable de la CI.
+[tool.setuptools]
+packages = [
+    "domain",
+    "optimizer",
+    "backend",
+    "backend.app",
+    "ml",
+    "ml.features",
+    "ml.model",
+    "ml.explain",
+    "ml.backtest",
 ]
 
 [tool.ruff]
