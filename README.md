@@ -15,6 +15,14 @@ budget**.
 > il illustre l'architecture et les choix techniques du produit Renov.ia, sans son périmètre
 > industriel (multi-client, authentification, SIG réel).
 
+## Aperçu
+
+![Interface de démonstration : KPI réseau en km, carte du risque colorée par Note 1–5, tableau des tronçons prioritaires, scénario de renouvellement budgété](docs/apercu.png)
+
+*Avec 2 M€ de budget, l'optimiseur sélectionne 124 tronçons (5,84 km) et annonce 22 casses
+évitées attendues (± 9,2, IC 95 %) sur 3 ans. Le tableau fait remonter les fontes grises des
+années 1930 — exactement les facteurs de risque injectés dans la simulation.*
+
 ## Architecture
 
 ```
