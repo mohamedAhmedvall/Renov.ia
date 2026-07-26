@@ -1,0 +1,51 @@
+{
+  "_lisez_moi": [
+    "Paramètres des réseaux synthétiques, une entrée par ville.",
+    "Le CENTRE ancre le réseau FICTIF sur le bon fond de carte, rien de plus :",
+    "il ne rentre dans aucun calcul du générateur. Il est choisi en zone bâtie,",
+    "pas forcément sur le point kilométrique officiel (celui de Marseille est sur",
+    "le Vieux-Port, ce qui poserait un quart de la trame en mer).",
+    "Aucune géométrie de réseau réel n'est utilisée ici.",
+    "angle_deg oriente la trame sur la direction dominante du bâti,",
+    "annee_mediane décale l'âge du patrimoine (les centres anciens ont été posés",
+    "en premier), ce qui donne à chaque ville un profil de risque distinct."
+  ],
+  "villes": {
+    "marseille": {
+      "nom": "Marseille",
+      "centre": [43.2903, 5.4005],
+      "zoom": 13,
+      "angle_deg": 22,
+      "mailles": [40, 32],
+      "pas_m": [132, 142],
+      "annee_mediane": 1952
+    },
+    "lyon": {
+      "nom": "Lyon",
+      "centre": [45.7578, 4.832],
+      "zoom": 13,
+      "angle_deg": 8,
+      "mailles": [38, 33],
+      "pas_m": [128, 138],
+      "annee_mediane": 1946
+    },
+    "bordeaux": {
+      "nom": "Bordeaux",
+      "centre": [44.8378, -0.5792],
+      "zoom": 13,
+      "angle_deg": 35,
+      "mailles": [38, 31],
+      "pas_m": [130, 140],
+      "annee_mediane": 1942
+    },
+    "paris": {
+      "nom": "Paris",
+      "centre": [48.8566, 2.3522],
+      "zoom": 13,
+      "angle_deg": 15,
+      "mailles": [42, 33],
+      "pas_m": [120, 128],
+      "annee_mediane": 1932
+    }
+  }
+}

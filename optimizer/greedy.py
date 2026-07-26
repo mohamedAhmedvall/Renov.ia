@@ -26,8 +26,14 @@ DEFAULT_PARAMS: dict = {
 }
 
 
-def _cout_remplacement(df: pd.DataFrame, params: dict) -> pd.Series:
-    """Coût = €/ml de base × majoration matériau × facteur diamètre × longueur."""
+def cout_remplacement(df: pd.DataFrame, params: dict | None = None) -> pd.Series:
+    """Coût = €/ml de base × majoration matériau × facteur diamètre × longueur.
+
+    Public : l'API l'expose aussi tronçon par tronçon (fiche et KPI de coût),
+    pour que l'estimation affichée soit exactement celle qu'utilise l'arbitrage
+    budgétaire — un écart entre les deux serait invisible et faux.
+    """
+    params = {**DEFAULT_PARAMS, **(params or {})}
     base = float(params.get("cout_ml_base", 300.0))
     fac_mat = df["famille_materiau"].map(params.get("facteur_materiau", {})).fillna(1.0)
     fac_diam = (df["diametre_mm"] / 150.0).clip(lower=0.7, upper=3.0)
@@ -53,7 +59,7 @@ def optimize_renewal(df: pd.DataFrame, budget: float, params: dict | None = None
     mu_neuf = p["hasard_neuf_km_an"] * (df["longueur_m"] / 1000.0) * horizon
     delta_mu = (mu - mu_neuf).clip(lower=0)                     # bénéfice : casses évitées
     benefice = delta_mu * df.get("consequence", pd.Series(1.0, index=df.index))
-    cout = _cout_remplacement(df, p)
+    cout = cout_remplacement(df, p)
 
     ratio = benefice / cout.replace(0, np.nan)
     # Tri déterministe : ratio décroissant, départage par id (reproductibilité).

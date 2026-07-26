@@ -1,17 +1,13 @@
 /** Note patrimoniale 1–5 : couleur TOUJOURS doublée du chiffre (RGAA 3.2). */
 
-const LIBELLES: Record<number, string> = {
-  1: "note 1 — risque faible",
-  2: "note 2 — risque modéré",
-  3: "note 3 — à surveiller",
-  4: "note 4 — prioritaire",
-  5: "note 5 — critique",
-};
+import { LIBELLE_NOTE } from "./notes";
 
 export function NoteBadge({ note }: { note: number | null }) {
-  if (note == null) return <span>—</span>;
+  // « n.d. » plutôt qu'un tiret : les lecteurs d'écran annoncent les tirets de
+  // façon très variable, du silence à « trait d'union ».
+  if (note == null) return <span>n.d.</span>;
   return (
-    <span className={`note note-${note}`} aria-label={LIBELLES[note] ?? `note ${note}`}>
+    <span className={`note note-${note}`} aria-label={`note ${note}, ${LIBELLE_NOTE[note] ?? ""}`}>
       {note}
     </span>
   );

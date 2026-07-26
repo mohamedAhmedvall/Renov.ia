@@ -1,18 +1,44 @@
-/* Socle visuel + accessibilité RGAA : contrastes AA, focus visible, lien d'évitement. */
+/* Socle visuel et accessibilité RGAA : contrastes AA, focus visible, lien d'évitement.
+
+   Thème clair unique, assumé : le fond de carte OpenStreetMap est clair, et un
+   thème sombre partiel laisserait une carte lumineuse au milieu d'une interface
+   sombre. Une palette unique pour les notes 1-5 (cf. notes.ts) sert la carte,
+   la légende, les badges et les graphiques. */
 
 :root {
   --encre: #1c2b33;
+  --encre-doux: #4a5c66;
   --fond: #fbfaf7;
-  --accent: #00676c; /* teal — contraste AA sur fond clair */
+  --accent: #00676c;      /* teal, contraste AA sur fond clair */
+  --accent-fonce: #00494d;
+  --bord: #d5d2ca;
+  --gris: #eceae4;
+  --rayon: 6px;
 }
 
 * { box-sizing: border-box; }
+
+/* Les panneaux d'onglets sont masqués par l'attribut `hidden` : il doit gagner
+   sur toutes les règles de disposition, y compris celles des écrans étroits. */
+[hidden] { display: none !important; }
+
+html { height: 100%; }
+
 body {
   margin: 0;
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   color: var(--encre);
   background: var(--fond);
   line-height: 1.5;
+}
+
+/* React rend dans #root : c'est LUI qui doit porter la colonne pleine hauteur,
+   sinon la carte reste à sa hauteur minimale et laisse un vide sous le pied de
+   page. 100dvh et non 100vh : la barre d'adresse mobile ferait sauter le calcul. */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
 }
 
 /* Lien d'évitement (RGAA 12.7) : visible à la prise de focus clavier */
@@ -22,58 +48,254 @@ body {
   background: var(--accent);
   color: #fff;
   padding: 0.5rem 1rem;
+  z-index: 1000;
 }
-.evitement:focus { left: 0.5rem; top: 0.5rem; z-index: 10; }
+.evitement:focus { left: 0.5rem; top: 0.5rem; }
 
 :focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* ---------- En-tête ---------- */
 
 header[role="banner"] {
   background: var(--accent);
   color: #fff;
-  padding: 1rem 1.5rem;
+  padding: 0.85rem 1.5rem;
 }
-header h1 { margin: 0; font-size: 1.4rem; }
-header p { margin: 0.2rem 0 0; opacity: 0.9; }
+header h1 { margin: 0; font-size: 1.3rem; line-height: 1.3; }
+header p { margin: 0.15rem 0 0; opacity: 0.92; font-size: 0.9rem; }
 .badge-demo {
+  display: inline-block;
   font-size: 0.7rem;
-  vertical-align: middle;
   background: #fff;
-  color: var(--accent);
+  color: var(--accent-fonce);
   border-radius: 999px;
-  padding: 0.15rem 0.6rem;
+  padding: 0.1rem 0.6rem;
   margin-left: 0.5rem;
+  vertical-align: 2px;
 }
 
-main { max-width: 960px; margin: 0 auto; padding: 1rem 1.5rem 3rem; }
-section { margin-top: 2rem; }
-h2 { border-bottom: 2px solid var(--accent); padding-bottom: 0.25rem; }
+/* ---------- Barre de filtres ---------- */
 
-.kpi { display: flex; gap: 2rem; flex-wrap: wrap; }
-.kpi dt { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
-.kpi dd { margin: 0; font-size: 1.6rem; font-weight: 700; }
+.barre {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid var(--bord);
+  background: #fff;
+}
+.champ { display: flex; flex-direction: column; gap: 0.2rem; }
+.champ label,
+.champ .etiquette {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--encre-doux);
+}
+.groupe-boutons { display: flex; gap: 0.4rem; }
 
-/* Attente : bloc de la forme d'une valeur KPI, plutôt qu'une page vide pendant
+input, select, button {
+  font: inherit;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--bord);
+  border-radius: var(--rayon);
+  background: #fff;
+  color: inherit;
+}
+button { background: var(--accent); color: #fff; border-color: var(--accent); cursor: pointer; }
+button:hover:not(:disabled) { background: var(--accent-fonce); border-color: var(--accent-fonce); }
+button:active:not(:disabled) { transform: translateY(1px); }
+button:disabled { opacity: 0.55; cursor: not-allowed; }
+button.secondaire { background: #fff; color: var(--accent-fonce); border-color: var(--accent); }
+button.secondaire:hover:not(:disabled) { background: var(--gris); color: var(--accent-fonce); }
+button.secondaire[aria-pressed="true"] {
+  background: var(--accent-fonce);
+  color: #fff;
+  border-color: var(--accent-fonce);
+}
+
+/* ---------- Indicateurs ---------- */
+
+.kpi {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 0.4rem 1.5rem;
+  margin: 0;
+  padding: 0.6rem 1.5rem;
+  border-bottom: 1px solid var(--bord);
+  background: var(--gris);
+}
+.kpi dt {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--encre-doux);
+}
+.kpi dd {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+}
+
+/* Attente : un bloc de la forme d'une valeur, plutôt qu'une page vide pendant
    le redémarrage de l'instance de démonstration. */
 .squelette {
   display: inline-block;
   width: 4.5rem;
   height: 1.6rem;
   border-radius: 4px;
-  background: #e4e1da;
+  background: #d9d5cc;
+  vertical-align: -0.25rem;
 }
 @media (prefers-reduced-motion: no-preference) {
   .squelette { animation: attente 1.4s ease-in-out infinite; }
 }
 @keyframes attente { 50% { opacity: 0.5; } }
 
-.carte { height: 420px; margin-top: 0.75rem; border: 1px solid #d5d2ca; border-radius: 8px; }
+/* ---------- Onglets ---------- */
 
-table { border-collapse: collapse; width: 100%; margin-top: 0.5rem; }
-th, td { border: 1px solid #d5d2ca; padding: 0.4rem 0.6rem; text-align: left; }
-thead th { background: #eceae4; }
-td.num { text-align: right; font-variant-numeric: tabular-nums; }
+.onglets {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0 1.5rem;
+  background: #fff;
+  border-bottom: 2px solid var(--accent);
+}
+.onglets button {
+  background: #fff;
+  color: var(--encre);
+  border: 1px solid var(--bord);
+  border-bottom: none;
+  border-radius: var(--rayon) var(--rayon) 0 0;
+  padding: 0.5rem 1.1rem;
+  font-weight: 600;
+}
+.onglets button:hover { background: var(--gris); color: var(--encre); }
+.onglets button[aria-selected="true"] {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
 
-/* Note 1–5 : couleur + chiffre (jamais la couleur seule) */
+/* ---------- Panneaux ---------- */
+
+main { flex: 1; min-height: 26rem; display: flex; }
+.panneau { flex: 1; min-height: 0; display: flex; }
+.panneau.defilant { overflow: auto; padding: 1.25rem 1.5rem 3rem; flex-direction: column; }
+
+.vide { font-size: 0.9rem; color: var(--encre-doux); max-width: 60ch; }
+.erreur { color: #a4161a; font-weight: 600; }
+.erreur.bandeau { margin: 0; padding: 0.6rem 1.5rem; background: #fdeaea; }
+
+/* ---------- Carte ---------- */
+
+.carte { flex: 1; min-height: 28rem; }
+.carte-attente {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gris);
+  color: var(--encre-doux);
+  font-size: 0.9rem;
+}
+.lateral {
+  width: 21rem;
+  flex: none;
+  border-left: 1px solid var(--bord);
+  background: #fff;
+  overflow: auto;
+  padding: 1rem 1.1rem 2rem;
+}
+.lateral h2 {
+  margin: 0 0 0.4rem;
+  font-size: 0.95rem;
+  border-bottom: 2px solid var(--accent);
+  padding-bottom: 0.25rem;
+}
+.lateral h2 + * { margin-bottom: 1.25rem; }
+
+.legende { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.3rem; }
+.legende button {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  width: 100%;
+  background: #fff;
+  color: var(--encre);
+  border: 1px solid var(--bord);
+  padding: 0.35rem 0.5rem;
+  text-align: left;
+  font-size: 0.85rem;
+  min-height: 2.1rem;
+}
+.legende button:hover:not(:disabled) { background: var(--gris); color: var(--encre); }
+.legende button[aria-pressed="false"] { opacity: 0.45; }
+.legende .puce { width: 1.6rem; height: 1rem; border-radius: 3px; flex: none; }
+.legende .libelle { flex: 1; min-width: 0; }
+.legende .compte { font-variant-numeric: tabular-nums; color: var(--encre-doux); }
+
+.fiche {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 0.75rem;
+  margin: 0;
+  font-size: 0.88rem;
+}
+.fiche dt { color: var(--encre-doux); }
+.fiche dd { margin: 0; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Infobulle MapLibre au survol d'un tronçon */
+.infobulle .maplibregl-popup-content {
+  font-size: 0.8rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--rayon);
+}
+.infobulle span { color: var(--encre-doux); }
+
+/* ---------- EDA ---------- */
+
+.grille {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(21rem, 1fr));
+  gap: 1.25rem;
+}
+.carte-graph {
+  background: #fff;
+  border: 1px solid var(--bord);
+  border-radius: 8px;
+  padding: 0.9rem 1rem 1rem;
+}
+.carte-graph h3 { margin: 0 0 0.1rem; font-size: 0.95rem; }
+.carte-graph p { margin: 0 0 0.6rem; font-size: 0.78rem; color: var(--encre-doux); }
+.carte-graph svg { width: 100%; height: auto; display: block; }
+
+/* ---------- Tableau ---------- */
+
+table { border-collapse: collapse; width: 100%; }
+th, td { border: 1px solid var(--bord); padding: 0.4rem 0.6rem; text-align: left; font-size: 0.88rem; }
+thead th { background: var(--gris); position: sticky; top: 0; z-index: 1; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+tbody tr:hover { background: #f0f6f6; }
+tbody tr[aria-selected="true"] { background: #dcecec; }
+
+/* Sélection au clavier : un vrai bouton, dessiné comme un lien de tableau. */
+.lien-troncon {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--accent-fonce);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.lien-troncon:hover { background: none; color: var(--encre); }
+
+/* Note 1-5 : couleur ET chiffre, jamais la couleur seule (RGAA 3.2) */
 .note {
   display: inline-block;
   min-width: 1.6rem;
@@ -89,25 +311,48 @@ td.num { text-align: right; font-variant-numeric: tabular-nums; }
 .note-4 { background: #b34e00; }
 .note-5 { background: #c62828; }
 
-form label { font-weight: 600; }
-input, select, button { font: inherit; padding: 0.35rem 0.6rem; }
-button {
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-button:hover { filter: brightness(1.1); }
+/* ---------- Scénario ---------- */
 
-.erreur { color: #b00020; font-weight: 600; }
+.scenario form { display: flex; gap: 1.25rem; align-items: flex-end; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.scenario .kpi-scenario {
+  border: 1px solid var(--bord);
+  border-radius: 8px;
+  background: #fff;
+  padding: 0.9rem 1.1rem;
+  max-width: 52rem;
+}
+.scenario .ic95 { font-size: 0.85rem; font-weight: 400; color: var(--encre-doux); }
+.scenario .lecture { max-width: 65ch; margin-top: 1rem; }
+
+/* ---------- Divers ---------- */
+
 .sr-only {
   position: absolute;
   width: 1px; height: 1px;
   margin: -1px; padding: 0;
   overflow: hidden;
   clip: rect(0 0 0 0);
-  white-space: nowrap; border: 0;
+  white-space: nowrap;
+  border: 0;
 }
 
-footer { border-top: 1px solid #d5d2ca; padding: 1rem 1.5rem; font-size: 0.85rem; }
+footer {
+  border-top: 1px solid var(--bord);
+  padding: 0.7rem 1.5rem;
+  font-size: 0.8rem;
+  background: #fff;
+  color: var(--encre-doux);
+}
+footer p { margin: 0; max-width: 90ch; }
+
+/* ---------- Écrans étroits ---------- */
+
+@media (max-width: 60rem) {
+  main { display: block; }
+  .panneau { display: block; }
+  .carte { min-height: 22rem; height: 22rem; }
+  .lateral { width: auto; border-left: none; border-top: 1px solid var(--bord); }
+  .panneau.defilant { padding: 1rem; }
+  .barre, .kpi, .onglets, header[role="banner"], footer, .erreur.bandeau { padding-left: 1rem; padding-right: 1rem; }
+  .onglets { overflow-x: auto; }
+}

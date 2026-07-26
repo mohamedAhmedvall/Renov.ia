@@ -14,6 +14,9 @@ frontend/dist/
 # Sorties ML (régénérables)
 ml/output/
 
+# Sorties d'outils de test navigateur
+.playwright-mcp/
+
 # IDE / OS
 .vscode/
 .idea/

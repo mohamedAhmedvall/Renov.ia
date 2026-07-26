@@ -26,11 +26,12 @@ COPY requirements-runtime.txt ./
 RUN pip install --no-cache-dir -r requirements-runtime.txt
 
 # Seulement ce qui sert à l'exécution : domaine, optimiseur, passerelle REST,
-# jeu synthétique + scores pré-calculés. Le pipeline ml/ reste hors image.
+# jeux synthétiques par ville + scores pré-calculés. Le pipeline ml/ et le
+# générateur restent hors image (exclus par .dockerignore).
 COPY domain/ ./domain/
 COPY optimizer/ ./optimizer/
 COPY backend/ ./backend/
-COPY data/synthetic/*.csv ./data/synthetic/
+COPY data/synthetic/ ./data/synthetic/
 COPY --from=front /front/dist ./frontend/dist
 
 # Exécution sans privilèges root.

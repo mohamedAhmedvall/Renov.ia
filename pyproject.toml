@@ -52,6 +52,12 @@ target-version = "py311"
 # PEP 8 (E/W), pyflakes (F), imports (I), bugbear (B), upgrade (UP)
 select = ["E", "W", "F", "I", "B", "UP"]
 
+[tool.ruff.lint.flake8-bugbear]
+# B008 vise les défauts mutables. Depends()/Query() en valeur par défaut est la
+# façon dont FastAPI déclare dépendances et paramètres : ce sont des marqueurs
+# immuables, pas un piège d'évaluation à l'import.
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query"]
+
 [tool.mypy]
 python_version = "3.11"
 ignore_missing_imports = true

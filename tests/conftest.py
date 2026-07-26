@@ -12,7 +12,10 @@ sys.path.insert(0, str(ROOT))
 from domain import DEFAULT_CONFIG  # noqa: E402
 from domain.repository import CsvTronconRepository  # noqa: E402
 
-DATA_DIR = ROOT / "data" / "synthetic"
+# Les tests s'appuient sur une ville de référence ; les autres partagent
+# strictement le même générateur, le même pipeline et le même domaine.
+VILLE_TEST = "marseille"
+DATA_DIR = ROOT / "data" / "synthetic" / VILLE_TEST
 
 
 @pytest.fixture(scope="session")

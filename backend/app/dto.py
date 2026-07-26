@@ -8,6 +8,16 @@ casse un DTO casse d'abord un test de contrat — pas la démo devant un client.
 from pydantic import BaseModel, Field
 
 
+class VilleDTO(BaseModel):
+    """Une ville de démonstration : ancrage cartographique du réseau simulé."""
+
+    cle: str
+    nom: str
+    centre_lat: float
+    centre_lon: float
+    zoom: int
+
+
 class TronconDTO(BaseModel):
     """Un tronçon scoré, tel qu'exposé au front."""
 
@@ -19,6 +29,9 @@ class TronconDTO(BaseModel):
     annee_pose: int
     typologie: str
     consequence: float = Field(ge=0, le=1)
+    population_desservie: int
+    casses_10ans: int
+    cout_renouvellement_euros: float
     score_h1: float | None = Field(default=None, ge=0, le=1)
     score_h3: float | None = Field(default=None, ge=0, le=1)
     score_h5: float | None = Field(default=None, ge=0, le=1)
@@ -26,12 +39,46 @@ class TronconDTO(BaseModel):
 
 
 class KpiDTO(BaseModel):
-    """KPI réseau — le métier raisonne en LINÉAIRE (km), pas en nombre de tronçons."""
+    """KPI du périmètre filtré — le métier raisonne en LINÉAIRE (km), pas en tronçons."""
 
-    lineaire_total_km: float
-    lineaire_note5_km: float
+    lineaire_km: float
     nb_troncons: int
+    lineaire_note5_km: float
     age_moyen_ans: float
+    casses_attendues_h3: float
+    cout_renouvellement_euros: float
+
+
+class SerieDTO(BaseModel):
+    """Un point d'une série agrégée (histogramme, barres)."""
+
+    cle: str
+    valeur: float
+
+
+class PointDTO(BaseModel):
+    """Un point de la courbe de capture, en fractions cumulées [0,1]."""
+
+    x: float
+    y: float
+
+
+class EdaDTO(BaseModel):
+    """Agrégats d'exploration du périmètre filtré, calculés côté serveur.
+
+    L'agrégation reste dans la passerelle plutôt que dans le navigateur : le
+    front n'a jamais besoin de télécharger les milliers de tronçons ni
+    l'historique de casses pour dessiner six graphiques.
+    """
+
+    nb_troncons: int
+    notes: list[SerieDTO]
+    casses_par_materiau: list[SerieDTO]
+    poses_par_decennie: list[SerieDTO]
+    lineaire_par_materiau_km: list[SerieDTO]
+    casses_par_annee: list[SerieDTO]
+    courbe_capture: list[PointDTO]
+    capture_20pct: float
 
 
 class OptimisationRequest(BaseModel):
@@ -51,7 +98,7 @@ class OptimisationResponse(BaseModel):
 
 
 class GeoFeatureDTO(BaseModel):
-    """Feature GeoJSON minimale d'un tronçon (LineString en coordonnées locales)."""
+    """Feature GeoJSON d'un tronçon (LineString en WGS84)."""
 
     type: str = "Feature"
     properties: dict
