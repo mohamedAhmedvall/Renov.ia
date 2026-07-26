@@ -8,6 +8,7 @@ serveur.
 Lancement : uvicorn backend.app.main:app --port 8000
 """
 
+import os
 from functools import lru_cache
 from pathlib import Path
 
@@ -34,9 +35,11 @@ app = FastAPI(
     "Données 100 % synthétiques.",
     version="1.0.0",
 )
+_default_origins = "http://localhost:5173,http://127.0.0.1:5173"
+_allowed_origins = os.getenv("ALLOWED_ORIGINS", _default_origins).split(",")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_origins=_allowed_origins,
     allow_methods=["*"],
     allow_headers=["*"],
 )

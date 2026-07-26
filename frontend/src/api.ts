@@ -1,5 +1,7 @@
 /** Client API typé — seul point de contact avec le backend (contrats DTO). */
 
+const BASE = import.meta.env.VITE_API_URL ?? "";
+
 export interface Kpi {
   lineaire_total_km: number;
   lineaire_note5_km: number;
@@ -36,13 +38,13 @@ async function json<T>(res: Response): Promise<T> {
 }
 
 export const api = {
-  kpi: () => fetch("/api/kpi").then((r) => json<Kpi>(r)),
+  kpi: () => fetch(`${BASE}/api/kpi`).then((r) => json<Kpi>(r)),
   troncons: (noteMin: number, limit = 200) =>
-    fetch(`/api/troncons?note_min=${noteMin}&limit=${limit}`).then((r) => json<Troncon[]>(r)),
+    fetch(`${BASE}/api/troncons?note_min=${noteMin}&limit=${limit}`).then((r) => json<Troncon[]>(r)),
   geojson: (noteMin: number) =>
-    fetch(`/api/geojson?note_min=${noteMin}`).then((r) => json<GeoJSON.FeatureCollection>(r)),
+    fetch(`${BASE}/api/geojson?note_min=${noteMin}`).then((r) => json<GeoJSON.FeatureCollection>(r)),
   optimiser: (budgetEuros: number, horizon = 3) =>
-    fetch("/api/optimiser", {
+    fetch(`${BASE}/api/optimiser`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ budget_euros: budgetEuros, horizon }),
