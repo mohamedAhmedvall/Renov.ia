@@ -83,6 +83,31 @@ mypy domain optimizer backend ml
 pytest                # unitaires + contrat + e2e (24 tests)
 ```
 
+## Déploiement
+
+La démo tient dans **un seul conteneur** : l'image compile le front (Vite) puis le fait servir
+par l'API FastAPI. Une seule origine, donc ni CORS ni URL d'API à configurer côté client.
+
+L'image n'embarque pas le pipeline ML (`xgboost`, `shap`, `scikit-learn`) : les probabilités
+calibrées sont pré-calculées et versionnées dans `data/synthetic/scores.csv`. L'API les lit,
+applique le domaine et l'optimiseur. Dépendances d'exécution dans `requirements-runtime.txt`.
+
+```bash
+docker build -t renovia-demo .
+docker run --rm -p 8000:8000 renovia-demo    # http://localhost:8000
+```
+
+**Sur Render** (`render.yaml`) : *New > Blueprint*, sélectionner ce dépôt, déployer. Render lit
+le blueprint, construit le `Dockerfile` et expose le service ; `autoDeploy` republie à chaque
+push sur `main`. Sur l'offre gratuite, l'instance s'arrête après quelques minutes sans visite
+et redémarre à la requête suivante : le premier affichage peut demander une minute, ce que
+l'interface annonce au visiteur.
+
+| Variable | Défaut | Rôle |
+|---|---|---|
+| `PORT` | `8000` | Port d'écoute (injecté par Render). |
+| `CORS_ORIGINS` | `http://localhost:5173,http://127.0.0.1:5173` | Origines autorisées. Inutile en production (même origine), nécessaire en développement avec Vite. |
+
 ## Correspondance code ↔ blocs de compétences (RNCP40573)
 
 | Bloc | Compétence illustrée | Où dans ce dépôt |

@@ -15,6 +15,17 @@ import { NoteBadge } from "./NoteBadge";
 
 const EUR = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 0 });
 
+/**
+ * L'instance de démonstration est hébergée sur une offre gratuite : elle s'arrête
+ * après quelques minutes sans visite et redémarre à la requête suivante. On
+ * l'explique au visiteur plutôt que d'afficher une trace technique.
+ */
+const MESSAGE_ERREUR =
+  "Les données ne sont pas accessibles pour l'instant. L'instance de démonstration " +
+  "s'arrête après quelques minutes sans visite : rechargez la page dans une minute.";
+
+const LIBELLES_KPI = ["Linéaire total", "Linéaire en note 5", "Tronçons", "Âge moyen"];
+
 export default function App() {
   const [kpi, setKpi] = useState<Kpi | null>(null);
   const [troncons, setTroncons] = useState<Troncon[]>([]);
@@ -23,18 +34,25 @@ export default function App() {
   const [scenario, setScenario] = useState<Scenario | null>(null);
   const [erreur, setErreur] = useState<string | null>(null);
 
+  const signaler = (e: unknown) => {
+    console.error(e);
+    setErreur(MESSAGE_ERREUR);
+  };
+
   useEffect(() => {
-    api.kpi().then(setKpi).catch((e) => setErreur(String(e)));
+    api.kpi().then(setKpi).catch(signaler);
   }, []);
   useEffect(() => {
-    api.troncons(noteMin).then(setTroncons).catch((e) => setErreur(String(e)));
+    api.troncons(noteMin).then(setTroncons).catch(signaler);
   }, [noteMin]);
 
   const lancerScenario = (ev: React.FormEvent) => {
     ev.preventDefault();
     setScenario(null);
-    api.optimiser(budget).then(setScenario).catch((e) => setErreur(String(e)));
+    api.optimiser(budget).then(setScenario).catch(signaler);
   };
+
+  const enChargement = kpi === null && erreur === null;
 
   return (
     <>
@@ -49,6 +67,22 @@ export default function App() {
 
         <section aria-labelledby="titre-kpi">
           <h2 id="titre-kpi">Réseau</h2>
+          {enChargement && (
+            <>
+              <dl className="kpi" aria-hidden="true">
+                {LIBELLES_KPI.map((libelle) => (
+                  <div key={libelle}>
+                    <dt>{libelle}</dt>
+                    <dd><span className="squelette" /></dd>
+                  </div>
+                ))}
+              </dl>
+              <p role="status">
+                Chargement. Le premier affichage peut demander une minute, le temps que
+                l&apos;instance de démonstration redémarre.
+              </p>
+            </>
+          )}
           {kpi && (
             <dl className="kpi">
               <div><dt>Linéaire total</dt><dd>{kpi.lineaire_total_km} km</dd></div>

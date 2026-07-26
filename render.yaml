@@ -1,0 +1,14 @@
+# Blueprint Render — https://render.com/docs/blueprint-spec
+#
+# Un seul service web Docker : l'API FastAPI sert aussi le front compilé.
+# Depuis le tableau de bord Render : New > Blueprint > sélectionner ce dépôt.
+
+services:
+  - type: web
+    name: renovia-demo
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    autoDeploy: true

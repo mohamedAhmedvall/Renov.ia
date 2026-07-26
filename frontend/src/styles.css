@@ -52,6 +52,20 @@ h2 { border-bottom: 2px solid var(--accent); padding-bottom: 0.25rem; }
 .kpi dt { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
 .kpi dd { margin: 0; font-size: 1.6rem; font-weight: 700; }
 
+/* Attente : bloc de la forme d'une valeur KPI, plutôt qu'une page vide pendant
+   le redémarrage de l'instance de démonstration. */
+.squelette {
+  display: inline-block;
+  width: 4.5rem;
+  height: 1.6rem;
+  border-radius: 4px;
+  background: #e4e1da;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .squelette { animation: attente 1.4s ease-in-out infinite; }
+}
+@keyframes attente { 50% { opacity: 0.5; } }
+
 .carte { height: 420px; margin-top: 0.75rem; border: 1px solid #d5d2ca; border-radius: 8px; }
 
 table { border-collapse: collapse; width: 100%; margin-top: 0.5rem; }
