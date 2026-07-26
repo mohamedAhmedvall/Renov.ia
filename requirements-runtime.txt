@@ -1,0 +1,14 @@
+# Dépendances d'EXÉCUTION de la démo déployée (API + front statique).
+#
+# Le pipeline ML (xgboost, shap, scikit-learn) n'est pas installé ici : les
+# scores calibrés sont pré-calculés et versionnés dans data/synthetic/scores.csv.
+# L'API se contente de les lire, d'appliquer le domaine et l'optimiseur.
+# Image ~10x plus légère, compatible avec les 512 Mo de l'offre gratuite Render.
+#
+# Pour développer ou ré-entraîner : pip install -e ".[dev]" (cf. pyproject.toml).
+
+fastapi>=0.110
+uvicorn[standard]>=0.29
+pydantic>=2.6
+pandas>=2.2
+numpy>=1.26

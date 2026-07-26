@@ -1,28 +1,14 @@
-services:
-  # ── Backend FastAPI ──────────────────────────────────────────────────────────
-  - type: web
-    name: renovia-api
-    runtime: python
-    plan: free
-    buildCommand: pip install .
-    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
-    envVars:
-      # Remplir avec l'URL du frontend après le premier déploiement
-      # ex : https://renovia-frontend.onrender.com
-      - key: ALLOWED_ORIGINS
-        sync: false
+# Blueprint Render — https://render.com/docs/blueprint-spec
+#
+# Un seul service web Docker : l'API FastAPI sert aussi le front compilé.
+# Depuis le tableau de bord Render : New > Blueprint > sélectionner ce dépôt.
 
-  # ── Frontend React/Vite (site statique) ────────────────────────────────────
-  - type: static
-    name: renovia-frontend
-    buildCommand: cd frontend && npm ci && npm run build
-    staticPublishPath: ./frontend/dist
-    envVars:
-      # Remplir avec l'URL du backend après le premier déploiement
-      # ex : https://renovia-api.onrender.com
-      - key: VITE_API_URL
-        sync: false
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
+services:
+  - type: web
+    name: renovia-demo
+    runtime: docker
+    plan: free
+    region: frankfurt
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    autoDeploy: true

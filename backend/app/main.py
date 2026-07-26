@@ -15,6 +15,7 @@ from pathlib import Path
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from backend.app.dto import (
     KpiDTO,
@@ -28,6 +29,7 @@ from optimizer import optimize_renewal
 
 ROOT = Path(__file__).resolve().parents[2]
 DATA_DIR = ROOT / "data" / "synthetic"
+FRONT_DIST = ROOT / "frontend" / "dist"
 
 app = FastAPI(
     title="Renov.ia — API de démonstration",
@@ -35,11 +37,13 @@ app = FastAPI(
     "Données 100 % synthétiques.",
     version="1.0.0",
 )
-_default_origins = "http://localhost:5173,http://127.0.0.1:5173"
-_allowed_origins = os.getenv("ALLOWED_ORIGINS", _default_origins).split(",")
+# En développement, le front Vite (5173) appelle l'API sur un autre port : CORS
+# nécessaire. En production le front compilé est servi par cette même application
+# (voir le montage en fin de fichier), donc même origine et CORS sans objet.
+CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:5173,http://127.0.0.1:5173")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=_allowed_origins,
+    allow_origins=[o.strip() for o in CORS_ORIGINS.split(",") if o.strip()],
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -126,3 +130,11 @@ def optimiser(req: OptimisationRequest) -> OptimisationResponse:
         )
     result = optimize_renewal(df, budget=req.budget_euros, params={"horizon": req.horizon})
     return OptimisationResponse(**result)
+
+
+# Front compilé servi par la même application quand il est présent (image Docker).
+# Monté en dernier : les routes /api, /health et /docs déclarées ci-dessus restent
+# prioritaires, le reste retombe sur index.html. Absent en développement, où Vite
+# sert le front lui-même.
+if FRONT_DIST.is_dir():
+    app.mount("/", StaticFiles(directory=FRONT_DIST, html=True), name="front")
